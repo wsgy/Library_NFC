@@ -1,0 +1,49 @@
+#!/bin/bash
+# I'm really lazy and dont want to completely rewrite this so it acts as a menu
+# I might just include a script that starts this one when it  quits
+# This is supposed to be run on a raspberry pi or old unix laptop
+source ~/code/Projects/Current/THS_Library/redis-bash/redis-bash-lib
+echo "Main Menu"
+echo "--------------------------"
+echo "[1] Check Out Book"
+echo "[2] Check In Book"
+echo "[3] List Checked Out"
+echo "[4] Add Book"
+echo "[5] Human Readable List"
+echo "--------------------------"
+echo -n ": "
+read ch
+if [ $ch = "1" ]
+	then
+	uid=$( nfc-list | grep "UID" )
+	redis-bash-cli -h localhost SET $uid "out"
+	echo "Checked Out" 
+fi
+
+if [ $ch = "2" ]
+	then
+	uid2=$( nfc-list | grep "UID" )
+	redis-bash-cli -h localhost SET $uid2 "in"
+	echo "Checked In"
+fi
+
+if [ $ch = "3" ]
+	then
+	out=$(redis-bash-cli -h localhost keys "out")
+	echo $out
+fi
+
+if [ $ch = "4" ]
+	then
+	echo "Place Book on Reader"
+	uid3=$( nfc-list | grep "UID")
+	redis-bash-cli -h localhost SET $uid3 "in"
+fi
+
+if [ $ch = "5" ]
+	then
+	cat "~/code/Projects/Current/THS_Library/hrt.txt" 
+fi
+
+
+
